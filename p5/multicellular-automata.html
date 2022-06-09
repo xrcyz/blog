@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Multiple Neighborhood Cellular Automata (MNCA) in p5"/>
+        <meta name="author" content="xrcyz">
+        
+        <!-- browser tab text -->  
+        <title>xrcyz ¯\_(ツ)_/¯</title>
+        <!-- style sheet -->
+        <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+        <!-- font families -->
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Mono" rel="stylesheet">
+        
+        <script src="https://cdn.jsdelivr.net/npm/p5@v1.3.1/lib/p5.js" type="text/javascript"></script>
+        <script src="multicellular-automata/sketch.js" type="text/javascript"></script>
+    </head>
+
+<body>
+
+    <div id="page-container">  
+      <div id="content-wrap">
+        <!-- nav bar -->   
+        <nav class="menu">
+          <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <!-- <li style="float:right"><a class="active" href="#">Login</a></li> -->
+          </ul>
+        </nav>
+        
+        <div id="content">
+        
+          <!-- table of blog posts -->    
+          <h2>Multicellular Automata in p5</h2>
+          
+          <p> Spacebar to reset the sketch. Mouse over the canvas to disturb the cell states.
+          
+          <!-- horizontal rule -->   
+          <hr/>
+          
+          <!-- p5 canvas -->   
+          <div id="p5canvas"></div>
+          
+          <!-- blurb -->   
+          <p>This is a parametric multiple neighborhood cellular automata. Each grid cell is updated using a function z = f(x,y), where x is the sum of immediate neighbors, y is the sum of single-offset neighbors, and z is the new cell state. In this example, the function is encoded in a tiny 61-parameter neural network.</p>
+          
+          <p>This sketch is a great example of complex behaviour arising from simple rules. 
+          
+          <p> See also: </p>
+          <ul>
+            <li><a href="https://slackermanz.com/understanding-multiple-neighborhood-cellular-automata/">Slackermanz</a></li>
+            <li><a href="https://znah.net/hexells/">Alex Mordvintsev</a></li>
+            <li><a href="https://softologyblog.wordpress.com/">Softology Blog</a></li>
+          </ul>
+          
+        </div>
+      </div>
+      
+      <footer id="footer">© 2022 xrcyz</footer>
+      
+    </div>
+
+</body>
+
+</html>

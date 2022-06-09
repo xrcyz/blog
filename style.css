@@ -1,0 +1,229 @@
+/* CSS is how you can add style to your website, such as colors, fonts, and positioning of your
+   HTML content. To learn how to do something, just try searching Google for questions like
+   "how to change link color." 
+   
+   https://www.w3.org/TR/selectors/
+   #foo {}      style the single element declared with an attribute id="foo"
+   .foo {}      style all elements with an attribute class="foo" (you can have multiple classes assigned to an element too, just separate them with spaces, e.g. class="foo bar")
+   foo bar {}   applies to any leaf bar of ancestor foo
+   foo > bar {} applies to first descendant bar of node foo 
+   foo#bar {}   
+   @foo {}      conditionals for eg. media on mobile
+*/
+
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+  color: #ABB2BF;
+  background-color: #282C34;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #ABB2BF;
+  background-color: #282C34;
+  font-family: 'Fira Mono', monospace;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+#content
+{
+  padding-top: 40px;
+  padding-bottom: 50px;
+  width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*****************************************************************************/
+/* Text formatting: headers, ... */
+
+
+
+/*****************************************************************************/
+/* Nav ribbon */
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #21252B;
+}
+
+nav li {
+  float: left;
+}
+
+nav li a {
+  display: block;
+  color: #ABB2BF;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav li a:hover {
+  background-color: #383B41;
+}
+
+.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+/*****************************************************************************/
+/* Footer ribbon */
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;            /* Footer height */
+  line-height: 2.5rem;
+}
+
+footer {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  background-color:  #21252B;
+  color: #ABB2BF;
+}
+
+/*****************************************************************************/
+/* Projects */
+
+.project table{
+    width:auto;
+    border: 0px;
+    padding: 0px;
+    text-align:left;
+}
+.project td, tr, th {
+    border: 0px;
+    padding-right: 10px;
+}
+
+/*****************************************************************************/
+/* Links */
+
+a {
+    color: #3794FF;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+a.imglink {
+    background: none;
+}
+a.imglink:hover {
+    background: none;
+}
+
+/*****************************************************************************/
+/* Text selection */
+
+::-moz-selection { /* Code for Firefox */
+  background: #3E4451;
+}
+
+::selection {
+  background: #3E4451;
+}
+
+
+/*****************************************************************************/
+/* Excel style table */
+
+.table
+{
+  /*width: 100%;*/
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table td
+{
+  padding: 10px;
+  border: 1px solid #ABB2BF;
+}
+
+.table th
+{
+  padding: 10px;
+  border: 1px solid #ABB2BF;
+}
+
+/*****************************************************************************/
+/* Inline code */
+
+:not(pre) > code {
+    /*
+    color: #c0c5ce;
+    background-color: #1c1d21;
+    */
+    color: #a5acb9;
+    background-color: #383d47;
+    font-size: 100%;
+    padding: 0.1em 0.4em;
+    display: inline; 
+  }
+  
+  /*****************************************************************************/
+  /* Code blocks */
+  
+  pre code {
+    background: #1C1E23;
+    line-height: normal;
+    /*border: 3px solid #21252B;*/
+    /*box-shadow: 1px 1px #21252B;*/
+  }
+  
+  /* https://www.digitalocean.com/community/tutorials/css-scrollbars */
+  /* Works on Chrome, Edge, and Safari */
+  pre code::-webkit-scrollbar {
+    height: 12px;               /* width of the entire scrollbar */
+  }
+  
+  pre code::-webkit-scrollbar-track {
+    background: #1C1D21;        /* color of the tracking area */
+  }
+  
+  pre code::-webkit-scrollbar-thumb {
+    background-color: #3B414D;    /* color of the scroll thumb */
+    /*border: 3px solid orange;  /* creates padding around scroll thumb */
+  }
+
+
+/*****************************************************************************/
+/*  Modifications for small screens */
+@media only screen and (max-width: 750px) {
+    body {
+        width: auto;
+    }
+    #content {
+        width: auto;
+        padding: 1px 10px 30px 20px;
+    }
+}
+
+
+/*****************************************************************************/
+/*  p5 canvas */
+
+.p5canvas {
+    margin: auto;
+    display: block;
+}
+
+

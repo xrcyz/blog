@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal blog about x,y,z"/>
+    <meta name="author" content="xrcyz">
+
+    <!-- browser tab text -->  
+    <title>xrcyz ¯\_(ツ)_/¯</title>
+    <!-- style sheet -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <!-- font families -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono" rel="stylesheet">
+    <!-- code highlighter -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/an-old-hope.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+  
+  
+  <body>
+    <div id="page-container">  
+      <div id="content-wrap">
+        <!-- nav bar -->   
+        <nav class="menu">
+          <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <!-- <li style="float:right"><a class="active" href="#">Login</a></li> -->
+          </ul>
+        </nav>
+        
+        <div id="content">
+        
+          <article>
+            <header>
+            <h1><a href="#">Neural Network Boolean Algebra</a></h1>
+            <time datetime="2022-01-12T00:00:00+00:00">January 12, 2022</time>
+            </header>
+          
+            <p>In this post I explore the idea of using boolean algebra in neural networks to construct arbitrary solids in the input space. I found this mental model useful for reasoning about how neural networks perform their functions.</p>
+          
+            <h2 id="demo">Demo</h2>
+          
+            <p>I sketched up a quick <a href="https://xrcyz.github.io/neural-metaballs/">proof of concept</a> to go with this post. It uses a three layer network to create a metaball heightmap, and animates the metaballs by changing the biases in layer 1.</p>
+            
+            <p align="center">
+                <a href="https://xrcyz.github.io/neural-metaballs/">
+                    <img src="../assets/images/neural-metaballs.gif" alt="neural metaballs" width="100%" />
+                </a>
+            </p>
+            
+            <h2 id="artificial-neurons">Artificial Neurons</h2>
+            
+            <p>The name ‘artificial neuron’ doesn’t tell us a lot about what it is or what it does. Instead, let’s look at some code.</p>
+            
+            <pre><code class = "js">let activation = 1 / (1 + exp(crossproduct(weights, inputs) + bias));</code></pre>
+            
+            <p>There are two important things happening in the activation function.</p>
+            <ol>
+              <li>The sum of the cross product with the bias is equivalent to testing if a point is above a hyperplane.</li>
+              <li>The logistic function converts the test to a boolean (kinda).</li>
+            </ol>
+            
+            <h3 id="hyperplanes">Hyperplanes</h3>
+            
+            <p>The value of <code class = "js">crossproduct(weights, inputs) + bias</code> is equivalent to testing if a point is above a line/plane.</p>
+            
+            <p>For one-dimensional inputs, <code>crossproduct(weights, inputs) + bias</code> is equal to <code>m * x + c</code>. If this value is positive, then the input must be above the threshold <code>x = -c / m</code>. Likewise if the number is negative, then the input must be below the threshold <code>x = -c / m</code>.</p>
+            
+            <pre><code class = "js">let input = x; 
+let weight = m; 
+let bias = c;
+let test = 1 / (1 + exp(m * x + c));</code></pre>
+            
+            <p>For two-dimensional inputs, <code>crossproduct(weights, inputs) + bias</code> is equal to <code>a * x + b * y + c</code>. If this number is positive, then the input must be above the line <code>y = (-a * x - c) / b</code>. Likewise if the number is negative, then the input must be below the line <code>y = (-a * x - c) / b</code>.</p>
+            
+            
+            <pre><code class = "js">let inputs = [x,y];
+let weight = [a,b];
+let bias = c;
+let test = 1 / (1 + exp(a * x + b * y + c));</code></pre>
+            
+            <p>Since we can extend this to planes in arbitrary dimensions, it is safe to say that <code>crossproduct(weights, inputs) + bias</code>  always tests for if the input vector is above or below a specified plane.</p>
+            
+            <h3 id="boundary-slope">Boundary slope</h3>
+            
+            <p>When an input vector travels from below the hyperplane to above the hyperplane, the value of the logistic function transitions from zero to one. The slope of this transition is defined by the scale of the weights and the bias.</p>
+            
+            <pre><code class = "js">let input  = x;
+let weight = scale * m;
+let bias   = scale * c;
+let test = 1 / (1 + exp(scale * (m * x + c)));</code></pre>
+            
+            <p>Note that the scale does not alter the definition of the hyperplane. We still calculate the term <code>m * x + c</code>, returning a positive or negative number. Then the <code>scale</code> parameter is used to sharpen or soften the logistic slope as we pass through that plane.</p>
+            
+            <h2 id="layer-0-inputs">Layer 0: Inputs</h2>
+            
+            <p>The neural network input layer holds an array of inputs. These are equivalent to the parameters of a method call. Ideally the inputs are normalised between zero and one, so the input vectors are in a predictable range.</p>
+            
+            <h2 id="layer-1-linearly-separating-the-input-space">Layer 1: Linearly Separating the Input Space</h2>
+            
+            <p>Assuming normalised inputs, then the input vector is guaranteed to reside within the unit hypercube of the input space.</p>
+            <ul>
+              <li>1 input =&gt; a vector on a unit line.</li>
+              <li>2 inputs =&gt; a vector inside a unit square.</li>
+              <li>3 inputs =&gt; a vector inside a unit cube.</li>
+              <li>N inputs =&gt; a vector inside a unit hypercube.</li>
+            </ul>
+            
+            <p>A single neuron in layer 1 can test for conditions by linearly separating the line, square, or cube.</p>
+            
+            <p>In one dimension:</p>
+            <pre><code class = "js">let test = 1 / (1 + exp(10 * (x - 0.5))); //return (x > 0.5);</code></pre>
+            
+            <p>In three dimensions:</p>
+            <pre><code class = "js">let inputs = [x,y,z];
+let test = 1 / (1 + exp(-10*(x + y - z - 1.5))); //return  (x && y && !z); equivalent to the plane z = x + y - 1.5 isolating vertex (1,1,0)</code></pre>
+            
+            <p>I want to stress that this is a <em>geometric</em> operation. In the case above, the neuron defines an implicit plane <code>z = x + y - 1.5</code> that linearly separates the unit cube. We can think of the input cube as being sliced into two solids, one red and one blue. If a point falls in the red or the blue solid, it receives a different classification.</p>
+            
+            <p>(We could also consider this to be a kind of heightmap, where the ‘solids’ are contours or isosurfaces on that heightmap. When we round the predictions of a neural network to one or zero, that is equivalent to running a contour line at height 0.5 through the heightmap defined by the neural network.)</p>
+            
+            <h2 id="layer-2-convex-hulls-in-input-space">Layer 2: Convex Hulls in Input Space</h2>
+            
+            <p>Layer 2 lets us perform union operations on the solids defined in layer 1. This lets us create any convex hull in the input space.</p>
+            
+            <p>(Technically we can do intersect and subtract operations in this layer as well, but since we are only dealing with linear separations, it works out to the same thing.)</p>
+            
+            <pre><code class = "js">//input layer
+let inputs = [x,y];
+
+//layer 1
+let L1 = 
+{
+    a: 1 / (1 + exp(-10 * (x - 0.5))), //return (x > 0.5)
+    b: 1 / (1 + exp(-10 * (y - 0.5))), //return (y > 0.5)
+};
+
+//layer 2
+let L2 = 
+{
+    a: 1 / (1 + exp(-10 * (L1.a + L1.b - 1.5))), //return (x > 0.5 && y > 0.5)
+}</code></pre>
+            
+            <p>To expand on this, we need to distinguish between the <strong>input space</strong> and the <strong>layer 1 space</strong>.</p>
+            <ul>
+              <li><strong>input space</strong> is a unit square containing <code>[x,y]</code>.</li>
+              <li><strong>L1 space</strong> is a a unit square containing <code>[L1.a,L1.b]</code>.</li>
+            </ul>
+            
+            <p>We know that each neuron in <code>L1</code> performs a single linear separation in the <strong>input space</strong>.</p>
+            <ul>
+              <li><code>L1.a</code> slices the unit cube halfway along the x-axis, colouring the solids red/blue for above/below the plane;</li>
+              <li><code>L1.b</code> slices the unit cube halfway long the y-axis, colouring the solids red/blue for above/below the plane;</li>
+            </ul>
+            
+            <table class="table" cellpadding="0" cellspacing="0" style="border: 1px;">
+              <thead>
+                <tr>
+                  <th>Layer 1 Output</th>
+                  <th>Solid Intersections</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>[0,0]</code></td>
+                  <td>BLUE, BLUE</td>
+                </tr>
+                <tr>
+                  <td><code>[1,0]</code></td>
+                  <td>RED, BLUE</td>
+                </tr>
+                <tr>
+                  <td><code>[0,1]</code></td>
+                  <td>BLUE, RED</td>
+                </tr>
+                <tr>
+                  <td><code>[1,1]</code></td>
+                  <td>RED, RED</td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <p>The neurons in layer 2 are now able to linearly separate the <strong>layer 1 space</strong>, which allows us to test for combinations of true/false values. For example, with the line <code>y = 1.5 - x</code> we can test if a point in <strong>input space</strong> lies in the intersecting solids <code>RED, RED</code>.</p>
+            
+            <p>Using this method, a single neuron in layer 2 should be able to construct any convex hull in the input space.</p>
+            <ul>
+              <li>In layer 1, each neuron defines a line/plane with a normal direction, <code>RED</code> pointing to inside the hull.</li>
+              <li>In layer 2, any point that tests <code>[RED,RED,...,RED]</code> is inside the hull.</li>
+            </ul>
+            
+            <p>Concave hulls cannot be built using this method, since a point inside a cave would return a false positive <code>RED</code> for lines/planes that are part of the convex hull.</p>
+            
+            <h2 id="layer-3-concave-hulls-in-input-space">Layer 3: Concave Hulls in Input Space</h2>
+            
+            <p>In Layer 3 we may union or subtract solids from layer 2. This lets us test concave hulls with voids in the input space.</p>
+            
+            <pre class="js"><code>//input layer
+let inputs = [x,y]; //point in the unit square
+
+//layer 1 - linear separation by line/plane
+let L1 = 
+{
+    a: 1 / (1 + exp(-10 * (x - 0.1))), //return (x > 0.1)
+    b: 1 / (1 + exp(-10 * (x - 0.3))), //return (x > 0.3)
+    c: 1 / (1 + exp(-10 * (0.7 - x))), //return (x < 0.7)
+    d: 1 / (1 + exp(-10 * (0.9 - x))), //return (x < 0.9)
+    e: 1 / (1 + exp(-10 * (y - 0.1))), //return (y > 0.1)
+    f: 1 / (1 + exp(-10 * (y - 0.3))), //return (y > 0.3)
+    g: 1 / (1 + exp(-10 * (0.7 - y))), //return (y < 0.7)
+    h: 1 / (1 + exp(-10 * (0.9 - y))), //return (y < 0.9)
+};
+
+//layer 2 - convex hulls by intersecting normals
+let L2 = 
+{
+    a: 1 / (1 + exp(-10 * (L1.a + L1.d + L1.e + L1.h - 3.5))), //big square
+    b: 1 / (1 + exp(-10 * (L1.b + L1.c + L1.f + L1.g - 3.5))), //little square
+}
+
+//layer 3 - concave hulls by subtracting convex hulls
+let L3 = 
+{
+    a: 1 / (1 + exp(-10 * (L2.a - L2.b - 0.5))), //square donut
+}</code></pre>
+            
+            <p>The same principles apply here. The neuron <code>L3.a</code> is linearly separating <strong>layer 2 space</strong> to test if the input point is inside the big square and outside the little square.</p>
+            
+            <h2 id="layer-4-arbitrary-regions-in-input-space">Layer 4: Arbitrary Regions in Input Space</h2>
+            
+            <p>In layer 4 we can union isolated solids from layer 3. This lets us test any arbitrary region of the input space.</p>
+            
+            <pre><code class = "js">//input layer
+let inputs = [x,y]; //point in the unit square
+
+//layer 1 - linear separation by line/plane
+let L1 = 
+{
+    a: 1 / (1 + exp(-10 * (x - 0.1))), //return (x > 0.1)
+    b: 1 / (1 + exp(-10 * (x - 0.2))), //return (x > 0.2)
+    c: 1 / (1 + exp(-10 * (0.3 - x))), //return (x < 0.3)
+    d: 1 / (1 + exp(-10 * (0.4 - x))), //return (x < 0.4)
+
+    e: 1 / (1 + exp(-10 * (y - 0.1))), //return (y > 0.1)
+    f: 1 / (1 + exp(-10 * (y - 0.2))), //return (y > 0.2)
+    g: 1 / (1 + exp(-10 * (0.3 - y))), //return (y < 0.3)
+    h: 1 / (1 + exp(-10 * (0.4 - y))), //return (y < 0.4)
+
+    i: 1 / (1 + exp(-10 * (x - 0.6))), //return (x > 0.6)
+    j: 1 / (1 + exp(-10 * (x - 0.7))), //return (x > 0.7)
+    k: 1 / (1 + exp(-10 * (0.8 - x))), //return (x < 0.8)
+    m: 1 / (1 + exp(-10 * (0.9 - x))), //return (x < 0.9)
+
+    n: 1 / (1 + exp(-10 * (y - 0.6))), //return (y > 0.6)
+    p: 1 / (1 + exp(-10 * (y - 0.7))), //return (y > 0.7)
+    q: 1 / (1 + exp(-10 * (0.8 - y))), //return (y < 0.8)
+    r: 1 / (1 + exp(-10 * (0.9 - y))), //return (y < 0.9)
+};
+
+//layer 2 - convex hulls by intersecting normals
+let L2 = 
+{
+    a: 1 / (1 + exp(-10 * (L1.a + L1.d + L1.e + L1.h - 3.5))), //big square 1
+    b: 1 / (1 + exp(-10 * (L1.b + L1.c + L1.f + L1.g - 3.5))), //little square 1
+    c: 1 / (1 + exp(-10 * (L1.i + L1.m + L1.n + L1.r - 3.5))), //big square 2
+    d: 1 / (1 + exp(-10 * (L1.j + L1.k + L1.p + L1.q - 3.5))), //little square 2
+}
+
+//layer 3 - concave hulls by subtracting convex hulls
+let L3 = 
+{
+    a: 1 / (1 + exp(-10 * (L2.a - L2.b - 0.5))), //square donut 1 
+    b: 1 / (1 + exp(-10 * (L2.c - L2.d - 0.5))), //square donut 2
+}
+
+//layer 4 - any region by unioning concave hulls
+let L4 = 
+{
+    a: 1 / (1 + exp(-10 * (L3.a + L3.b - 0.5))), //square donut 1 and square donut 2
+}</code></pre>
+            
+            <p>In this example, the neuron <code>L4.a</code> is linearly separating <strong>layer 3 space</strong> to test if the input point is inside either one of the two square donuts.</p>
+            
+            <h2 id="the-language-of-neural-networks">The Language of Neural Networks</h2>
+            
+            <p>Armed with this mental model, we can begin to reason about how neural networks perform their functions.</p>
+            
+            <p>Suppose you have a program you want to model as a neural network. If we can find a schema to represent the input parameters as numbers between one and zero, then we can represent the set of all program test cases as a point cloud in a unit hypercube. Similarly, if we can represent all components of the return value of the function as numbers between one and zero, then each one of those could be a neuron in the output layer of a network. Now we can use boolean algebra to construct arbitrary hypersolids in the input space, drawing hulls around sets of inputs that return the same answer, thus encoding the logic of our program in the weights of the network.</p>
+            
+            <p>If we shrink-wrap the hulls too tightly, then we get “over training”. Ideally we want the program to be able to interpolate similar answers to similar inputs, so that it doesn’t fail on edge cases that weren’t in the training data set (the test regime).</p>
+          
+          
+            
+          </article>
+          
+        </div>
+      </div>
+      
+      <footer id="footer">© 2022 xrcyz</footer>
+      
+  
+    </div>
+  </body>
+  
+  
+</html>
