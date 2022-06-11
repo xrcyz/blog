@@ -62,69 +62,69 @@
               
               <h2 id="input">Input</h2>
               
-              <p>The  <code class = "js">input</code> array is a one-hot vector representing the last character of the string. At time zero, we initialise this to the letter B.</p>
+              <p>The <code class = "js">input</code> array is a one-hot vector representing the last character of the string. At time zero, we initialise this to the letter B.</p>
               
               <pre><code class = "js">let input   = [1,0,0,0,0,0,0]; //current token [B,T,S,X,P,V,E]</code></pre>
               
               <h2 id="hidden-state">Hidden State</h2>
               
               <blockquote>
-                <p>Throughout this section I will use to  <code class = "js">node[i]</code> to refer to the index of the current node in the Reber Grammar graph.</p>
+                <p>Throughout this section I will use to <code class = "js">node[i]</code> to refer to the index of the current node in the Reber Grammar graph.</p>
               </blockquote>
               
               <h3 id="memory-state">Memory State</h3>
               
-              <p>The  <code class = "js">memory</code> array is a one-hot vector representing the state of the Reber Grammar (the index of the current node in the graph).</p>
+              <p>The <code class = "js">memory</code> array is a one-hot vector representing the state of the Reber Grammar (the index of the current node in the graph).</p>
               
               <pre><code class = "js">let memory  = [0,0,0,0,0,0]; //current node in the graph: [0,1,2,3,4,5]</code></pre>
               
               <h3 id="memory-updates">Memory Updates</h3>
               
-              <p>The  <code class = "js">eraser</code>,  <code class = "js">writer</code>, and  <code class = "js">filter</code> arrays are responsible for updating the memory vector. This is equivalent to crossing an edge in the graph and moving to a new state.</p>
+              <p>The <code class = "js">eraser</code>, <code class = "js">writer</code>, and <code class = "js">filter</code> arrays are responsible for updating the memory vector. This is equivalent to crossing an edge in the graph and moving to a new state.</p>
               
               <pre><code class = "js">let eraser  = [0,0,0,0,0,0]; //what to erase in memory
 let writer  = [0,0,0,0,0,0]; //what to write to memory
 let filter  = [1,1,1,1,1,1]; //filter the writer when it returns multiple write values</code></pre>
               
-              <p>Whenever the LSTM receives a new input, the  <code class = "js">eraser</code>,  <code class = "js">writer</code>, and  <code class = "js">filter</code> perform a test on each node to see if its preconditions have been met. For example, here is the test for  <code class = "js">node[0]</code>:</p>
+              <p>Whenever the LSTM receives a new input, the <code class = "js">eraser</code>, <code class = "js">writer</code>, and <code class = "js">filter</code> perform a test on each node to see if its preconditions have been met. For example, here is the test for <code class = "js">node[0]</code>:</p>
               
               <pre><code class = "js">eraser[0] = 0;                  //always reset
 writer[0] = Math.tanh(5 * B);   //if we get a B, then 100% we arrived at node 0
 filter[0] = 1;                  //never filter</code></pre>
               
-              <p>From there we might move to  <code class = "js">node[1]</code>. This node is interesting for two reasons:</p>
+              <p>From there we might move to <code class = "js">node[1]</code>. This node is interesting for two reasons:</p>
               <ul>
-                <li>We don’t want to erase the memory if the graph loops on  <code class = "js">S</code>.</li>
-                <li>We don’t want to increment the memory if the graph loops on  <code class = "js">T</code> at  <code class = "js">node[5]</code>.</li>
+                <li>We don’t want to erase the memory if the graph loops on <code class = "js">S</code>.</li>
+                <li>We don’t want to increment the memory if the graph loops on <code class = "js">T</code> at <code class = "js">node[5]</code>.</li>
               </ul>
               
-              <p>This is where the  <code class = "js">eraser</code> and  <code class = "js">filter</code> tests come into play:</p>
+              <p>This is where the <code class = "js">eraser</code> and <code class = "js">filter</code> tests come into play:</p>
               
               <pre><code class = "js">eraser[1] = 1 / (1 + exp(-10 * (0.5 - X)));           //reset on X (exit node 1)
 writer[1] = Math.tanh(5 * T);                         //if we get a T, then ring the bell for node[1]
 filter[1] = 1 / (1 + exp(-30 * (0.75 - memory[5])));  //but only if we are not on node 5</code></pre>
               
-              <p>Note that I am taking moderate care to ensure that the firing threshold for each node in memory is approximately  <code class = "js">1.0</code>. This becomes important in the  <code class = "js">reader</code> layer, when we need to test multiple nodes to predict a single character. A node may accumulate evidence when precedent edges are crossed, but is not considered ‘active’ until it crosses the firing threshold.</p>
+              <p>Note that I am taking moderate care to ensure that the firing threshold for each node in memory is approximately <code class = "js">1.0</code>. This becomes important in the <code class = "js">reader</code> layer, when we need to test multiple nodes to predict a single character. A node may accumulate evidence when precedent edges are crossed, but is not considered ‘active’ until it crosses the firing threshold.</p>
               
-              <p>With that in mind, let us now consider  <code class = "js">node[2]</code>, which may be reached by  <code class = "js">T(SSS)X</code> or  <code class = "js">X(TTT)VP</code>. In the  <code class = "js">writer</code> I use a factor of  <code class = "js">0.55</code> to increment the memory by half if a precedent edge  <code class = "js">T</code>,  <code class = "js">X</code>, or  <code class = "js">P</code> is crossed. This covers the cases for  <code class = "js">TX</code> (via node 1) and  <code class = "js">XP</code> (via node 5). Finally, the filter is set to ignore  <code class = "js">T</code> when it loops on  <code class = "js">node[5]</code>.</p>
+              <p>With that in mind, let us now consider <code class = "js">node[2]</code>, which may be reached by <code class = "js">T(SSS)X</code> or <code class = "js">X(TTT)VP</code>. In the <code class = "js">writer</code> I use a factor of <code class = "js">0.55</code> to increment the memory by half if a precedent edge <code class = "js">T</code>, <code class = "js">X</code>, or <code class = "js">P</code> is crossed. This covers the cases for <code class = "js">TX</code> (via node 1) and <code class = "js">XP</code> (via node 5). Finally, the filter is set to ignore <code class = "js">T</code> when it loops on <code class = "js">node[5]</code>.</p>
               
               <pre><code class = "js">eraser[2] = 1 / (1 + exp(-30 * (0.65 - memory[2])));   //reset on exit
 writer[2] = Math.tanh(0.55 * (T + X + P));             //breadcrumbs to node 2
 filter[2] = 1 / (1 + exp(-30 * (0.65 - memory[5])));   //do not increment from node 5</code></pre>
               
-              <p>With  <code class = "js">node[3]</code>, I apply weights to  <code class = "js">S</code> and  <code class = "js">V</code> to catch the precedent sequences  <code class = "js">S</code> and  <code class = "js">VV</code>. The  <code class = "js">eraser</code> resets on  <code class = "js">P</code> to avoid sequence  <code class = "js">VPS</code>, and the filter blocks the looping  <code class = "js">S</code> on  <code class = "js">node[1]</code> to avoid sequence  <code class = "js">SSS</code>.</p>
+              <p>With <code class = "js">node[3]</code>, I apply weights to <code class = "js">S</code> and <code class = "js">V</code> to catch the precedent sequences <code class = "js">S</code> and <code class = "js">VV</code>. The <code class = "js">eraser</code> resets on <code class = "js">P</code> to avoid sequence <code class = "js">VPS</code>, and the filter blocks the looping <code class = "js">S</code> on <code class = "js">node[1]</code> to avoid sequence <code class = "js">SSS</code>.</p>
               
               <pre><code class = "js">eraser[3] = 1 / (1 + exp(-10 * (0.5 - P)));            //reset on P
 writer[3] = Math.tanh(3.0 * S + 0.55 * V);             //breadcrumbs to node 3
 filter[3] = 1 / (1 + exp(-10 * (0.7 - memory[1])));    //do not increment from node 1</code></pre>
               
-              <p> <code class = "js">node[4]</code> presents a refreshingly simple case, where we can increment on  <code class = "js">V</code> and immediately erase/filter on exit.</p>
+              <p> <code class = "js">node[4]</code> presents a refreshingly simple case, where we can increment on <code class = "js">V</code> and immediately erase/filter on exit.</p>
               
               <pre><code class = "js">eraser[4] = 1 / (1 + exp(-10 * (0.6 - memory[4])));     //reset on exit
 writer[4] = Math.tanh(5 * V);                           //breadcrumbs to node 4
 filter[4] = 1 / (1 + exp(-10 * (0.6 - memory[4])));     //filter V on exit</code></pre>
               
-              <p> <code class = "js">node[5]</code> filters inputs from  <code class = "js">node[1]</code>, allowing it to trigger on sequences  <code class = "js">BP</code> and  <code class = "js">X</code>. The  <code class = "js">eraser</code> resets the state on exiting across edge  <code class = "js">V</code>.</p>
+              <p> <code class = "js">node[5]</code> filters inputs from <code class = "js">node[1]</code>, allowing it to trigger on sequences <code class = "js">BP</code> and <code class = "js">X</code>. The <code class = "js">eraser</code> resets the state on exiting across edge <code class = "js">V</code>.</p>
               
               <pre><code class = "js">eraser[5] = 1 / (1 + exp(-10 * (0.5 - S - V)));         //reset on S,V
 writer[5] = Math.tanh(0.55 * B + 0.7 * P + 5 * X);      //breadcrumbs to node 5
@@ -139,7 +139,7 @@ filter[5] = 1 / (1 + exp(-30 * (0.65 - memory[1])));    //do not increment from 
               
               <h2 id="readout">Readout</h2>
               
-              <p>The  <code class = "js">reader</code> layer outputs a one-hot vector representing the probability of yielding a specified character. Each element of the  <code class = "js">reader</code> performs a test of the  <code class = "js">memory</code> vector, to determine if the current state could yield a given character.</p>
+              <p>The <code class = "js">reader</code> layer outputs a one-hot vector representing the probability of yielding a specified character. Each element of the <code class = "js">reader</code> performs a test of the <code class = "js">memory</code> vector, to determine if the current state could yield a given character.</p>
               
               <pre><code class = "js">reader[0] = 0; //we never yield B
 reader[1] = Math.tanh(5 * (memory[0] + memory[5] - 0.7)); //T may yield from 0 or 5
@@ -149,14 +149,14 @@ reader[4] = Math.tanh(5 * (memory[0] + memory[4] - 0.7)); //P may yield from 0 o
 reader[5] = Math.tanh(5 * (memory[4] + memory[5] - 0.7)); //V may yield from 4 or 5
 reader[6] = Math.tanh(5 * (memory[3]             - 0.7)); //E may yield from 3</code></pre>
               
-              <p>As mentioned earlier, the choice of weightings in the  <code class = "js">eraser</code>,  <code class = "js">writer</code>, and  <code class = "js">filter</code> come into play when we start adding nodes in the reader. If there is a chance that two nodes are both partially activated, we want their sum to be less than the value of a single fully activated node.</p>
+              <p>As mentioned earlier, the choice of weightings in the <code class = "js">eraser</code>, <code class = "js">writer</code>, and <code class = "js">filter</code> come into play when we start adding nodes in the reader. If there is a chance that two nodes are both partially activated, we want their sum to be less than the value of a single fully activated node.</p>
               
               <h2 id="discussion">Discussion</h2>
               
               <p>This LSTM has some interesting features/flaws that are worthy of discussion.</p>
               <ol>
-                <li>The internal logic assumes that sequences always start with  <code class = "js">B</code>.</li>
-                <li>Long loops on  <code class = "js">T</code> from  <code class = "js">node[5]</code> cause false positives on  <code class = "js">node[1]</code>.</li>
+                <li>The internal logic assumes that sequences always start with <code class = "js">B</code>.</li>
+                <li>Long loops on <code class = "js">T</code> from <code class = "js">node[5]</code> cause false positives on <code class = "js">node[1]</code>.</li>
                 <li>The program running on the LSTM is frustratingly obfuscated.</li>
                 <li>Snapping to vertices may prevent drift in long sequences and help normalize inputs.</li>
               </ol>
@@ -167,7 +167,7 @@ reader[6] = Math.tanh(5 * (memory[3]             - 0.7)); //E may yield from 3</
               
               <h3 id="long-loops">Long Loops</h3>
               
-              <p>When the system loops on  <code class = "js">T</code> from  <code class = "js">node[5]</code>, a false positive is generated in  <code class = "js">writer[1]</code>. This gets filtered by  <code class = "js">filter[1]</code>, but the filter returns a slightly positive value - so with enough loops,  <code class = "js">node[1]</code> will achieve false activation.</p>
+              <p>When the system loops on <code class = "js">T</code> from <code class = "js">node[5]</code>, a false positive is generated in <code class = "js">writer[1]</code>. This gets filtered by <code class = "js">filter[1]</code>, but the filter returns a slightly positive value - so with enough loops, <code class = "js">node[1]</code> will achieve false activation.</p>
               
               <p>This is an interesting error that I can see it popping up in real-world applications. Improbable sequences are less likely to be represented in the training data, and so errors on said sequences are less likely to be caught and corrected during training.</p>
               
@@ -185,13 +185,19 @@ reader[6] = Math.tanh(5 * (memory[3]             - 0.7)); //E may yield from 3</
                 <li>A loop of state changes is equivalent to walking the vertices of a hyperpolygon in memory space.</li>
               </ul>
               
-              <p>Critically, we don’t want the memory drifting in weird orbits if we go into a long loop (cycling  <code class = "js">PXV</code> for example). We want to snap to the vertices of the hyperpolygon so that the  <code class = "js">reader</code> correctly classifies the hidden state. With this in mind, I can see why it may make sense to preprocess the inputs into one-hot or binary vectors, to limit the range of outputs on the  <code class = "js">eraser</code>,  <code class = "js">writer</code>, and  <code class = "js">filter</code>. There might even be a case for doubling the memory size and rounding the memory elements after every state change (one slot per breadcrumb).</p>
+              <p>Critically, we don’t want the memory drifting in weird orbits if we go into a long loop (cycling <code class = "js">PXV</code> for example). We want to snap to the vertices of the hyperpolygon so that the <code class = "js">reader</code> correctly classifies the hidden state. With this in mind, I can see why it may make sense to preprocess the inputs into one-hot or binary vectors, to limit the range of outputs on the <code class = "js">eraser</code>, <code class = "js">writer</code>, and <code class = "js">filter</code>. There might even be a case for doubling the memory size and rounding the memory elements after every state change (one slot per breadcrumb).</p>
               
               <h2 id="future-work">Future Work</h2>
               
               <p>For the sake of completeness I should compare this solution to a trained LSTM and discuss the differences. TBA.</p>
-              
             
+              <h2 id="refereces">References</h2>
+            
+              <ul>
+                <li><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Chris Olah's blog</a></li>
+                <li><a href="https://arxiv.org/abs/1909.09586">Understanding LSTMs -- a tutorial</a></li>
+              </ul>
+
           </article>
           
         </div>
