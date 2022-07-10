@@ -21,6 +21,8 @@ var sketch = function(p)
     p.createCanvas(DIM, DIM);
     //p.colorMode(p.RGB, 1, 1, 1);
     p.noStroke();
+    p.frameRate(20); 
+    
     colormap = new ColorMap(); 
       
     initWeights();
