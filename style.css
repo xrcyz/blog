@@ -227,9 +227,10 @@ a.imglink:hover {
 /*****************************************************************************/
 /*  p5 canvas */
 
-.p5canvas {
+#p5canvas {
     margin: auto;
     display: block;
+    text-align:center;
 }
 
 
