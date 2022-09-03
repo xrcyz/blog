@@ -18,13 +18,13 @@ var sketch = function(p)
         let canvas = p.createCanvas(400, 400, p.WEBGL);
 
         //disable scrolling when mouse is over the canvas
-        let htmlCanvasRef = document.getElementById( canvas.id() );
-        document.addEventListener("wheel", (e)=>{
-            if(e.target === htmlCanvasRef) 
-            { 
-                e.preventDefault(); 
-            } 
-        }, { passive: false });
+        //let htmlCanvasRef = document.getElementById( canvas.id() );
+        //document.addEventListener("wheel", (e)=>{
+        //    if(e.target === htmlCanvasRef) 
+        //    { 
+        //        e.preventDefault(); 
+        //    } 
+        //}, { passive: false });
 
         p.colorMode(p.HSB,1,1,1,1);
         
@@ -75,6 +75,9 @@ var sketch = function(p)
         {
             invZoom -= event.delta / 1000;
             if(invZoom < 0.001) invZoom = 0.001;
+
+            //disable browser scrolling
+            return false;
         }
     }
 
