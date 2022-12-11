@@ -50,7 +50,7 @@
             
             <p>I picked the update rule for Conway’s Game of Life because it was the simplest interesting program I could think of. If a cell is active and has 2 or 3 neighbors, it stays active. If an inactive cell has exactly 3 neighbors, then it activates. All other cells become inactive. From these simple rules we get the vast catalogue of patterns so far discovered.</p>
             
-            <pre><code class="js">if(self == 1 && neighbors == (2|3)) return 1;
+            <pre><code class="js">if(self == 1 && (neighbors == 2 || neighbors == 3)) return 1;
 if(self == 0 && neighbors == 3) return 1;
 else return 0;</code></pre>
             

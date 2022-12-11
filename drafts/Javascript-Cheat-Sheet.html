@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal blog about x,y,z"/>
+    <meta name="author" content="xrcyz">
+
+    <!-- browser tab text -->  
+    <title>xrcyz ¯\_(ツ)_/¯</title>
+    <!-- style sheet -->
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
+    <!-- font families -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono" rel="stylesheet">
+    <!-- code highlighter -->
+    <link rel="stylesheet" href="../assets/css/an-old-hope.min.css">
+    <script src="../assets/js/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+  
+  
+  <body>
+    <div id="page-container">  
+      <div id="content-wrap">
+        <!-- nav bar -->   
+        <nav class="menu">
+          <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <!-- <li style="float:right"><a class="active" href="#">Login</a></li> -->
+          </ul>
+        </nav>
+        
+        <div id="content">
+        
+          <article>
+            
+            <header>
+                <h1><a href="#">Javascript Cheat Sheet</a></h1>
+                <time datetime="2022-11-12T13:00:00+00:00">Dec 11, 2022</time>
+            </header>
+            
+            <p>This is my cheat sheet for javascript. These are not secrets, you can find them in the documentation if you know where to look. But when I started out, I didn't know where to look, and it's very hard to google something that you don't know the name of. I still forget the names sometimes, and so this blog post is partly a memo to help me remember, and partly an open letter to the next student who needs a leg up in their journey.</p>
+            
+            <h2>Object Initializers</h2> 
+
+            <p>Object initializers (also called object literals) are a way to create an object with properties and values, without having to define a class first.</p>
+
+            <p>Example:</p>
+            
+            <pre><code class="js">const planet = {
+    name: 'Earth',
+    radius: 6371,
+    distanceFromSun: 147.3,
+};</code></pre>
+
+            <p>This code creates an object with three properties: name, radius, and distanceFromSun.</p>
+
+            <p>Object initializers can also be used to create objects with methods. A method is a function that belongs to an object. For example, we could add a getGravity method to our planet object like this:</p>
+
+            <pre><code class="js">const planet = {
+        name: 'Earth',
+        radius: 6371,
+        distanceFromSun: 147.3,
+        getGravity() {
+            return 9.81;
+    }
+};</code></pre>
+
+            <p>Now our planet object has a getGravity method that returns the value 9.81.</p>
+
+            <h2>Object Destructuring</h2>
+
+            <p>Object destucturing is a way to map properties of an object onto named variables into the current scope.</p>
+            
+            <p>Example:</p>
+            
+            <pre><code class="js">const star = {
+    name: 'Proxima Centauri',
+    radius: 4.24,
+    luminosity: 0.0017
+};
+
+const { name, radius, luminosity } = star;
+
+console.log(name); // Proxima Centauri
+console.log(radius); // 4.24
+console.log(luminosity); // 0.0017
+}</code></pre>
+            
+            <p>Object destructuring can also be used to assign default values to variables in case the property doesn't exist in the object. For example, if our star object didn't have a color property, we could provide a default value like this:</p>
+            
+            <pre><code class="js">const { name, radius, color = 'white' } = star;</code></pre>
+
+            <p>In this case, if the star object doesn't have a color property, the color variable will be assigned the default value of white.</p>
+            
+            <h2>Classes</h2>
+            
+            <p>If we are simulating a solar system that has many planets, it may make sense to create a blueprint for the behaviour of a planet object. This allows us to write code once and reuse it many times. This is the purpose of a class.</p>
+
+            <pre><code class="js">const PI = 3.141592;
+
+class Planet {
+    static G = 6.6743 * 1E-5; //gravitational constant
+    
+    constructor(name, radius, distanceFromSun, density=5.5)
+    {
+        this.name = name;
+        this.radius = radius;
+        this.distanceFromSun = distanceFromSun;
+        this.volume = 4/3 * PI * radius**3;
+        this.mass = this.volume * density;
+        this._selfDestructCode = Math.floor(Math.random()*10000);
+    }
+
+    getGravity(radius = this.radius) {
+        return Planet.G * this.mass / (radius**2);
+    }
+}
+
+const earth = new Planet('Earth', 6371, 149.6); // default density
+const mars = new Planet('Mars', 3389, 231.5, 3.93); // density = 3.93
+
+console.log(earth.getGravity()); // 9.78
+console.log(mars.getGravity()); // 3.72</code></pre>
+
+            <p>In this example, we define a <code>Planet</code> class that acts as a blueprint for the Earth and Mars objects. The <code>constructor</code> method is called whenever we create a <code>new Planet()</code>. Then we take the name, radius, and distance from the sun (the <i>arguments</i> of the function) and store them in internal variables prefixed with the <code>this</code> keyword. That means that in the <code>getGravity()</code> method, <code>this.mass</code> will return a different value in the Earth object than in the Mars object.</p>
+
+            <p>This might become useful if, for example, we want to calculate the orbits of each planet. Rather than writing nine orbital path calculations (one for each planet), we can attach a single method to the <code>Planet</code> class and reuse that method for each planet object.</p>
+
+            <h3>Default Parameters</h3>
+
+            <p>In the above code, Mars specifies its density at 3.93, whereas Earth uses the default value of 5.5. This is an example of a default function parameter, which is initialized with a default value if the argument is absent or undefined.</p>
+
+            <h3>Static Variables</h3>
+
+            <p>In the above code, the <code>getGravity()</code> method multiplies <code>Planet.G</code> by the mass and divides by the square of the radius. <code>G</code> is a static variable, and it is shared between all instances of the <code>Planet</code> class. Whereas Earth and Mars have their own unique <code>this.mass</code> variables, they share a common reference to the static variable <code>Planet.G</code>.</p>
+
+            <h3>Private Variables</h3>
+
+            <p>Javascript doesn't really have private variables. Instead, the person who write a class may politely ask you to stand behind the yellow lines by prefixing a variable name with an underscore. In this case, the naming of the variable <code>this._selfDestructCode</code> is telling you that the author would prefer you don't access this variable directly. Instead, there is likely to be a helper method such as <code>getSelfDestructCode(authorisation)</code>.</p>
+
+
+          </article>
+          
+        </div>
+      </div>
+      
+      <footer id="footer">© 2022 xrcyz</footer>
+      
+  
+    </div>
+  </body>
+  
+  
+</html>
