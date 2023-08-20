@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Circle from tangent tangent point"/>
+        <meta name="author" content="xrcyz">
+        
+        <!-- browser tab text -->  
+        <title>xrcyz ¯\_(ツ)_/¯</title>
+        <!-- style sheet -->
+        <link href="../style.css" rel="stylesheet" type="text/css" media="all">
+        <!-- font families -->
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Mono" rel="stylesheet">
+        
+        <script src="../assets/js/p5.min.js" type="text/javascript"></script>
+        <script src="circle-tangent-point/sketch.js" type="text/javascript"></script>
+    </head>
+
+<body>
+
+    <div id="page-container">  
+      <div id="content-wrap">
+        <!-- nav bar -->   
+        <nav class="menu">
+          <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../pages/about.html">About</a></li>
+            <li><a href="../pages/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        
+        <div id="content">
+        
+          <!-- header -->    
+          <h2>Circle from two tangents and a point in p5js</h2>
+          
+          <!-- horizontal rule -->   
+          <hr/>
+          
+          <!-- p5 canvas -->   
+          <div id="p5canvas"></div>
+          
+          <!-- blurb -->   
+          <p>Find a circle that touches two tangents and a point.</p>
+          
+          <p>Method:</p>
+          <ul>
+            <li>Express the circle C along bisector S as <code class="language-plaintext highlighter-rouge">C.y = m * C.x + b</code></li>
+            <li>Calculate the distance from point P to circle C as <code class="language-plaintext highlighter-rouge">r**2 == (P.x - C.x)**2 + (P.y - C.y)**2</code></li>
+            <li>Substitute <code class="language-plaintext highlighter-rouge">C.y</code> into distance PC.
+            <li>Express tangent A as line <code class="language-plaintext highlighter-rouge">a * x + b * y + c == 0</code></li>
+            <li>Calculate the distance from tangent A to circle C as <code class="language-plaintext highlighter-rouge">r**2 = (a*C.x + b*C.y + c)**2 / (a**2+b**2)</code></li>
+            <li>Substitute <code class="language-plaintext highlighter-rouge">C.y</code> into distance AC.
+            <li>Set distance AP equal to CP and simplify to a quadratic in terms of <code class="language-plaintext highlighter-rouge">C.x</code></li>
+            <li>Solve for <code class="language-plaintext highlighter-rouge">C.x</code> using the quadratic formula.</li>
+          </ul>
+
+          <p>The quadratic formula yields two solutions (red and blue). Interestingly, red or blue is closer to the intersect depending on which side of the tangents we are on.</p>
+
+          <p> References: </p>
+          <ul>
+            <li><a href="https://www.youtube.com/watch?v=561VtgXaEYo">Tarrou's Chalk Talk</a></li>
+          </ul>
+          
+        </div>
+      </div>
+      
+      <footer id="footer">© 2023 xrcyz</footer>
+      
+    </div>
+
+</body>
+
+</html>

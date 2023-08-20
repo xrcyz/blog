@@ -67,13 +67,15 @@
         getGravity() {
             return 9.81;
     }
-};</code></pre>
+};
+
+console.log(planet.getGravity()); //9.81</code></pre>
 
             <p>Now our planet object has a getGravity method that returns the value 9.81.</p>
 
             <h2>Object Destructuring</h2>
 
-            <p>Object destucturing is a way to map properties of an object onto named variables into the current scope.</p>
+            <p>Object destucturing is a way of extracting the properties of an object into named variables in the current scope.</p>
             
             <p>Example:</p>
             
@@ -98,7 +100,7 @@ console.log(luminosity); // 0.0017
             
             <h2>Classes</h2>
             
-            <p>If we are simulating a solar system that has many planets, it may make sense to create a blueprint for the behaviour of a planet object. This allows us to write code once and reuse it many times. This is the purpose of a class.</p>
+            <p>If we are simulating a solar system that has many planets, it may make sense to create a blueprint for the behaviour of a planetary object. This allows us to write code once and reuse it efficiently.</p>
 
             <pre><code class="js">const PI = 3.141592;
 
@@ -140,8 +142,17 @@ console.log(mars.getGravity()); // 3.72</code></pre>
 
             <h3>Private Variables</h3>
 
-            <p>Javascript doesn't really have private variables. Instead, the person who write a class may politely ask you to stand behind the yellow lines by prefixing a variable name with an underscore. In this case, the naming of the variable <code>this._selfDestructCode</code> is telling you that the author would prefer you don't access this variable directly. Instead, there is likely to be a helper method such as <code>getSelfDestructCode(authorisation)</code>.</p>
+            <p>Javascript doesn't really have private variables. Instead, the person who wrote a class may politely ask you to stand behind the yellow lines by prefixing a variable name with an underscore. In this case, the naming of the variable <code>this._selfDestructCode</code> is telling you that the author would prefer you don't access this variable directly. Instead, there is likely to be a helper method such as <code>getSelfDestructCode(authorisation)</code>, which checks if the request is authorised.</p>
 
+            <h2>Methods</h2> 
+
+            <p>A method is a block of code that can be called by name, such as <code>earth.getGravity()</code>. This enables us to efficiently reuse code in many places, and to make code more readable by using descriptive method names.</p>
+
+            <p>In javascript, technically everything is a function. This means</p>
+
+            <h3>Method Overloading</h3> 
+
+            <p>Javascript doesn't support method overloading. If you call <code>earth.add(volume)</code> and <code>earth.add(mass)</code> then both of those calls are going to land at the same <code>add</code> method. This means you either have to typecheck parameters in every method to handle the different overloads, or separate the logic into two methods such as <code>addVolume(volume)</code> and <code>addMass(mass)</code>.</p>
 
           </article>
           
