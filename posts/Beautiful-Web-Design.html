@@ -57,9 +57,9 @@
             color: white;
             padding: 15px;
             border-radius: 8px;
-            position: relative; /* Changed from absolute to relative */
+            position: relative; 
             margin-top: -80px; /* Creates overlap with content */
-            width: 100%; /* Adjust as needed */
+            width: 100%; 
             text-align: center;
         }
         .signup-prompt h2 {
@@ -181,12 +181,10 @@
             box-shadow: 0 4px 6px rgba(0, 50, 150, 0.2);
         }
         
-        /* Additional styles to ensure text justification */
         .subscription-card p {
             text-align: justify;
         }
         
-        /* Ensure the button text remains centered */
         .subscription-card .btn {
             text-align: center;
         }
@@ -260,13 +258,10 @@
             animation: jiggle 0.3s ease-in-out;
         }
         .download-text {
-            /*font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;*/
             font-size: 14px;
             color: #666;
-            /*text-transform: uppercase;*/
             letter-spacing: 2px;
             line-height: 1.2;
-            /*text-shadow: 2px 2px 4px rgba(0,0,0,0.5);*/
         }
         
         .download-text span {
@@ -310,7 +305,6 @@
                         <time datetime="2024-07-30T13:00:00+00:00">July 30, 2024</time>
                     </header>
                     <p>In today's digital landscape, a website is often the first point of contact between a business and its potential customers. Just as a well-designed storefront can entice passersby to step inside, beautiful web design can captivate visitors and encourage them to explore further. But the importance of aesthetically pleasing websites goes beyond mere visual appeal. A thoughtfully crafted design enhances user experience, builds trust, and communicates brand values effectively. In an age where attention spans are short and competition is fierce, beautiful web design has become not just a luxury, but a necessity for businesses looking to thrive online.</p>
-                    <!-- Add more paragraphs as needed to ensure content is long enough to trigger fadeout -->
                 
                     <div class="content-overlay"></div>
                     
@@ -398,7 +392,7 @@
                 if (popupId === 'cookieConsent') {
                     popup.style.transform = 'translateY(100%)';
                 }
-                setTimeout(() => showPopup(popup), 5000); // Reappear after 1 seconds
+                setTimeout(() => showPopup(popup), 5000); 
             }
 
             function showPopup(element) {
@@ -413,7 +407,7 @@
 
             // Initial show for cookie consent
             if (popupId === 'cookieConsent') {
-                setTimeout(() => showPopup(popup), 50); // Show after 0.05 seconds
+                setTimeout(() => showPopup(popup), 50); 
             }
 
             return { hidePopup, showPopup };
@@ -425,7 +419,6 @@
 
         const subscriptionCard = document.getElementById('subscriptionCard');
         const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton']);
-        //showPopup(subscriptionCard);
         setTimeout(() => showPopup(subscriptionCard), 3000);
 
         const signupButton = document.getElementById('signup-button');
@@ -433,7 +426,7 @@
             this.classList.add('jiggle');
             setTimeout(() => {
                 this.classList.remove('jiggle');
-            }, 300); // Match this to the animation duration
+            }, 300); 
         });
 
         const downloadButton = document.getElementById('download-button');
@@ -441,7 +434,7 @@
             this.classList.add('jiggle');
             setTimeout(() => {
                 this.classList.remove('jiggle');
-            }, 300); // Match this to the animation duration
+            }, 300); 
         });
 
     </script>
