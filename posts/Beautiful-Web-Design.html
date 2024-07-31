@@ -96,6 +96,7 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 12px;
             transition: opacity 0.3s ease-in-out;
+            opacity: 0;
         }
         .login-box {
             top: 20px;
@@ -371,6 +372,7 @@
 
     <div id="subscriptionCard" class="subscription-card">
         <div>
+            <button class="ad-close-button" id="ad-close-button">&times;</button>
             <h3 class="text-center mb-4">Unlock More Web Design Insights</h3>
             <p class="text-left mb-4">Join our community of passionate designers and developers. Gain access to exclusive content, tutorials, and the latest trends in web design.</p>
             <p class="text-center text-muted" ><small>Discover techniques and inspiration to elevate your web projects.</small></p>
@@ -406,9 +408,10 @@
             buttons.forEach(button => button.addEventListener('click', hidePopup));
 
             // Initial show for cookie consent
-            if (popupId === 'cookieConsent') {
-                setTimeout(() => showPopup(popup), 50); 
-            }
+            delay = (popupId === 'cookieConsent') ? 50 :
+                    (popupId === 'loginBox') ? 1000 : 
+                    (popupId === 'locationPrompt') ? 2000 : 3000;
+            setTimeout(() => showPopup(popup), delay); 
 
             return { hidePopup, showPopup };
         }
@@ -418,7 +421,7 @@
         setupPopup('cookieConsent', ['acceptCookies', 'manageCookies']);
 
         const subscriptionCard = document.getElementById('subscriptionCard');
-        const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton']);
+        const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton', 'ad-close-button']);
         setTimeout(() => showPopup(subscriptionCard), 3000);
 
         const signupButton = document.getElementById('signup-button');
