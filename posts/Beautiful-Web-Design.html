@@ -229,7 +229,7 @@
             text-align: center;
         }
         
-        .ad-close-button {
+        .dialog-close-button {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -317,7 +317,7 @@
                 </div>
 
                 <div class="advertisement">
-                    <button class="ad-close-button">&times;</button>
+                    <button class="dialog-close-button">&times;</button>
                     <button class="download-button" id="download-button">Download</button>
                     <!-- <p class="download-subtext">You wouldn't download a car.</p> -->
                     <p class="download-text">
@@ -372,7 +372,7 @@
 
     <div id="subscriptionCard" class="subscription-card">
         <div>
-            <button class="ad-close-button" id="ad-close-button">&times;</button>
+            <button class="dialog-close-button" id="dialog-close-button">&times;</button>
             <h3 class="text-center mb-4">Unlock More Web Design Insights</h3>
             <p class="text-left mb-4">Join our community of passionate designers and developers. Gain access to exclusive content, tutorials, and the latest trends in web design.</p>
             <p class="text-center text-muted" ><small>Discover techniques and inspiration to elevate your web projects.</small></p>
@@ -421,7 +421,7 @@
         setupPopup('cookieConsent', ['acceptCookies', 'manageCookies']);
 
         const subscriptionCard = document.getElementById('subscriptionCard');
-        const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton', 'ad-close-button']);
+        const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton', 'dialog-close-button']);
         setTimeout(() => showPopup(subscriptionCard), 3000);
 
         const signupButton = document.getElementById('signup-button');
