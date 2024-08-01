@@ -211,6 +211,7 @@
             display: flex;
             justify-content: space-between;
         }
+        
         @keyframes jiggle {
             0% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -239,7 +240,28 @@
             cursor: pointer;
             color: #666;
         }
-        
+        .shy-button-container {
+            width: 100%;
+            height: 30px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .shy-button {
+            position: absolute;
+            width: 100px;
+            height: 100%;
+            background: none;
+            border: none;
+            color: grey;
+            text-decoration: none;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.1s ease-out;
+            transform: translateX(0);
+        }   
         .download-button {
             background-color: #2ecc71;
             color: white;
@@ -338,9 +360,14 @@
         <div class="card-header" style="background: white">
             <b>Sign in with Panopticon</b>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="padding: 16px 16px 0px">
             <p>Simple and secure account management.</p>
-            <button id="loginButton" class="btn btn-primary w-100">Continue</button>
+            <div class="d-flex justify-content-end"></div>
+                <button id="loginButton" class="btn btn-primary w-100">Continue</button>
+                <div class="shy-button-container">
+                    <button type="button" class="shy-button" id="shyButton">Maybe Later</button>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -372,7 +399,7 @@
 
     <div id="subscriptionCard" class="subscription-card">
         <div>
-            <button class="dialog-close-button" id="dialog-close-button">&times;</button>
+            <button class="dialog-close-button" id="subscribe-close-button">&times;</button>
             <h3 class="text-center mb-4">Unlock More Web Design Insights</h3>
             <p class="text-left mb-4">Join our community of passionate designers and developers. Gain access to exclusive content, tutorials, and the latest trends in web design.</p>
             <p class="text-center text-muted" ><small>Discover techniques and inspiration to elevate your web projects.</small></p>
@@ -416,12 +443,12 @@
             return { hidePopup, showPopup };
         }
 
-        setupPopup('loginBox', ['loginButton']);
+        setupPopup('loginBox', ['loginButton', 'shyButton']);
         setupPopup('locationPrompt', ['allowButton', 'blockButton']);
         setupPopup('cookieConsent', ['acceptCookies', 'manageCookies']);
 
         const subscriptionCard = document.getElementById('subscriptionCard');
-        const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton', 'dialog-close-button']);
+        const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton', 'subscribe-close-button']);
         setTimeout(() => showPopup(subscriptionCard), 3000);
 
         const signupButton = document.getElementById('signup-button');
@@ -439,6 +466,52 @@
                 this.classList.remove('jiggle');
             }, 300); 
         });
+
+        //shy button
+        const container = document.querySelector('.shy-button-container');
+        const shyButton = document.querySelector('.shy-button');
+        const maxMove = 64; // Maximum pixels to move
+        const bufferDistance = 120; // Distance in pixels to create a buffer zone
+
+        function updateButtonPosition(e) {
+            const rect = shyButton.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+
+            // Calculate distances from mouse to button edges
+            const distanceTop = Math.abs(e.clientY - rect.top);
+            const distanceBottom = Math.abs(e.clientY - rect.bottom);
+            const distanceLeft = Math.abs(e.clientX - rect.left);
+            const distanceRight = Math.abs(e.clientX - rect.right);
+
+            // Check if mouse is outside the buffer zone
+            if (e.clientY < rect.top - bufferDistance || 
+                e.clientY > rect.bottom + bufferDistance ||
+                e.clientX < rect.left - bufferDistance || 
+                e.clientX > rect.right + bufferDistance) {
+                    shyButton.style.transform = 'translateX(0)'; // Reset position
+                return;
+            }
+
+            // If within buffer zone, calculate movement
+            const containerCenter = containerRect.left + containerRect.width / 2;
+            const buttonCenter = rect.left + rect.width / 2;
+            const distanceFromCenter = e.clientX - containerCenter;
+            const distanceFromButton = e.clientX - buttonCenter;
+            
+            let move;
+            if (distanceFromCenter < 0 && distanceFromButton < 16) {
+                // Mouse is on the left side, move button right
+                move = maxMove;//Math.min(maxMove, Math.abs(distanceFromCenter) / 10);
+            } else if(distanceFromButton > -16){
+                // Mouse is on the right side, move button left
+                move = -maxMove;//-Math.min(maxMove, Math.abs(distanceFromCenter) / 10);
+            }
+            
+            shyButton.style.transform = `translateX(${move}px)`;
+        }
+
+        container.addEventListener('mousemove', updateButtonPosition);
+        document.addEventListener('mousemove', updateButtonPosition);
 
     </script>
 </body>
