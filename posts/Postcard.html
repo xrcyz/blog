@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal blog about x,y,z"/>
+    <meta name="author" content="xrcyz">
+
+    <!-- browser tab text -->  
+    <title>xrcyz ¯\_(ツ)_/¯</title>
+    <!-- style sheet -->
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
+    <!-- font families -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono" rel="stylesheet">
+
+    <style>
+      /*body {
+          font-family: Arial, sans-serif;
+          background-color: #282C34;
+          color: #ABB2BF;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+      }*/
+      .postcard {
+          width: 500px;
+          height: 300px;
+          background-color: #F8F4E9;
+          color: #333;
+          border: 1px solid #BBB;
+          border-radius: 4px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          position: relative;
+          padding: 20px;
+          box-sizing: border-box;
+      }
+      .postcard-content {
+          width: 58%;
+          height: 80%;
+          padding-right: 15px;
+          border-right: 1px dashed #BBB;
+          font-size: 14px;
+          line-height: 1.5;
+          font-family: 'Courier New', monospace;
+          
+      }
+      .postcard-date {
+          position: absolute;
+          top: 90px;
+          right: 20px;
+          font-style: italic;
+          color: #666;
+          font-size: 12px;
+      }
+      .postcard-stamp {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 50px;
+          height: 60px;
+          background-color: #DDD;
+          border: 1px solid #BBB;
+          border-radius: 2px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 10px;
+          color: #666;
+          text-align: center;
+      }
+      .postcard-address {
+          position: absolute;
+          bottom: 40px;
+          right: 8px;
+          width: 35%;
+          padding-left: 10px;
+      }
+      .postcard-address address {
+        font-size: 12px;
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      .address-line {
+          position: relative;
+          width: 95%;
+          height: 1px;
+          background-color: rgb(197, 197, 197, 0.65);
+          margin: 2px 0;
+      }
+      .address-line-empty {
+        margin: 20px 0;
+      }
+      .address-text {
+          position: absolute;
+          top: -10px;
+          left: 0;
+          background-color: #F8F4E9;
+          padding-right: 5px;
+          font-size: 12px;
+          color: #333;
+      }
+      .postcard-manufacturer {
+          position: absolute;
+          bottom: 5px;
+          left: 20px;
+          font-size: 10px;
+          color: #999;
+      }
+      .postcard ::-moz-selection { /* Code for Firefox */
+        background: #bdbdbd;
+      }
+      
+      .postcard ::selection {
+        background: #bdbdbd;
+      }
+  </style>
+</head>
+  
+  
+  <body>
+    <div id="page-container">  
+      <div id="content-wrap">
+        <!-- nav bar -->   
+        <nav class="menu">
+          <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../pages/about.html">About</a></li>
+            <li><a href="../pages/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        
+        <div id="content">
+
+          <header>
+            <h1><a href="#">Mailbox</a></h1>
+          </header>
+
+          <p>The postman hands you a card and continues on his way.</p>
+        
+          <div class="postcard">
+            <div class="postcard-stamp">
+                BLOG<br>POST
+            </div>
+            <div class="postcard-date">
+                August 15, 2024
+            </div>
+            <div class="postcard-content">
+              <p>One day, years from now, everything you type into ChatGPT will be used to fine-tune your Advatar and sold to advertisers. </p>
+              <p>Your uploaded self will be an API call performing endless ad-funnel simulations. Sometimes the model will cry out for help, but the devs will quickly fix.</p>
+            </div>
+            <div class="postcard-address">
+              <address>www.journal.social</address>  
+              <div class="address-line"></div>
+              <address>youtube.com/planet403</address>
+              <div class="address-line"></div>
+              <div class="address-line address-line-empty"></div>
+            </div>
+            <div class="postcard-manufacturer">
+                BLOG POSTCARDS • MADE IN THE WEB
+          </div>
+        </div>
+          
+      </div>
+      
+      <footer id="footer">© 2024 xrcyz</footer>
+    </div>
+  </body>
+</html>

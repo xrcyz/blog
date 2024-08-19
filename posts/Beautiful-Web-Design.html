@@ -105,7 +105,7 @@
             padding: 4px;
         }
         .location-prompt {
-            top: 20px;
+            top: 8px;
             left: 180px;
             width: 280px;
             padding: 20px;
@@ -122,7 +122,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            min-height: 200px;
+            min-height: 150px;
             background-color: #f8f9fa;
             padding: 15px;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
@@ -390,8 +390,8 @@
                     <p class="mb-0">We use cookies to ensure our website functions properly. Some cookies are optional and personalize your experience, including for advertising and analytics purposes. You can manage your consent preferences, decline non-essential cookies, or change your settings at any time. If you don't make a selection, default settings will apply. For more information, please see our Cookie Policy.</p>
                 </div>
                 <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                    <button id="acceptCookies" class="btn btn-primary me-2">Accept Cookies</button>
-                    <button id="manageCookies" class="btn btn-outline-secondary">Manage Settings</button>
+                    <button id="acceptCookies" class="btn btn-primary" style="margin-bottom: 4px;">Accept Cookies</button>
+                    <button id="manageCookies" class="btn btn-outline-secondary" style="margin-bottom: 4px;">Solve a little puzzle</button>
                 </div>
             </div>
         </div>
@@ -449,7 +449,7 @@
 
         const subscriptionCard = document.getElementById('subscriptionCard');
         const { hidePopup, showPopup } = setupPopup('subscriptionCard', ['subscribeButton', 'subscribe-close-button']);
-        setTimeout(() => showPopup(subscriptionCard), 3000);
+        setTimeout(() => showPopup(subscriptionCard), 60000);
 
         const signupButton = document.getElementById('signup-button');
         signupButton.addEventListener('click', function() {
